@@ -22,7 +22,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'png'])
 
 # Database
-app.config['SQLALCHEMY_DATABASE_URI'] = getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
