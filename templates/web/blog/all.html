@@ -1,0 +1,72 @@
+{% extends 'layouts/master.html' %}
+{% block title %}Blog{% endblock %}
+{% block page_title %}Blog{% endblock %}
+{% block body %}
+
+<div id="app">
+    <a v-for="articulo in articulos" href="">
+        <div class="card">
+            <div v-if="articulo.portada" class="card-image">
+                <figure class="image is-3by2">
+                    <img :src="articulo.portada" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="title">
+                    [[ articulo.title ]]
+                </div>
+                <div class="subtitle">
+                    [[ articulo.text ]]
+                </div>
+            </div>
+        </div>
+    </a>
+    <nav class="pagination is-centered" style="margin-top: 2rem" role="navigation" aria-label="pagination">
+        <a @click="cambiarPaginaAnterior" v-if="pag != 1" class="pagination-previous is-primary">Anterior</a>
+        <a @click="cambiarPaginaSiguiente" v-if="pag != max_pags" class="pagination-next is-primary">Siguiente</a>
+    </nav>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            data: {
+                pag: 1,
+                articulos: [],
+                max_pags: {{ max_pags }}
+            },
+            mounted: function () {
+                this.cargarPagina();
+                console.log('hola')
+            },
+            methods: {
+                cargarPagina: function () {
+                    // Obtenemos todos los articulos por Ajax
+                    // GET /someUrl
+                    this.$http.get('/api/articulos/' + this.pag).then(response => {
+                        // get body data
+                        this.articulos = response.body;
+                    }, response => {
+                        // error callback
+                    });
+                },
+                cambiarPaginaSiguiente: function () {
+                    this.pag += 1;
+                    this.cargarPagina();
+                },
+                cambiarPaginaAnterior: function () {
+                    this.pag -= 1;
+                    this.cargarPagina();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

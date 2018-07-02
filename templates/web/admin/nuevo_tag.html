@@ -1,0 +1,19 @@
+{% extends 'layouts/admin.html' %}
+{% block title %}Nuevo tag{% endblock %}
+{% block page_title %}Nuevo tag{% endblock %}
+
+{% block body %}
+<form action="" method="post">
+    <!-- Tags -->
+    <div class="field">
+        <label for="" class="label">Tags</label>
+        <div class="control">
+            <input name="tag" class="input" type="text" placeholder="Titulo">
+        </div>
+    </div>
+    <!-- Enviar -->
+    <div class="field" style="padding-top: 1rem">
+        <input type="submit" value="Añadir" class="button is-primary">
+    </div>
+</form>
+{% endblock %}

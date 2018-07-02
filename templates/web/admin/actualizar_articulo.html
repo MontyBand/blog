@@ -1,0 +1,85 @@
+{% extends 'layouts/admin.html' %}
+{% block title %}Actualizar articulo{% endblock %}
+{% block page_title %}Actualizar articulo{% endblock %}
+
+{% block scripts %}
+<!-- Jquery 3 -->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+</script>
+<!-- Para el select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<!-- In your Javascript (external .js resource or <script> tag) -->
+<script>
+    $(document).ready(function() {
+        $('select').select2();
+    });
+</script>
+<!-- Para editar textos del textarea -->
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>tinymce.init({ selector:'textarea' });</script>
+{% endblock %}
+
+{% block body %}
+<form action="" enctype="multipart/form-data" method="post">
+    <!-- Titulo -->
+    <div class="field">
+        <label for="" class="label">Titulo</label>
+        <div class="control">
+            <input name="titulo" class="input" type="text" placeholder="Titulo" value="{{ articulo.title }}">
+        </div>
+    </div>
+    <!-- Contenido -->
+    <div class="field">
+        <label for="" class="label">Contenido</label>
+        <div class="control">
+            <textarea class="textarea" name="contenido" type="text" placeholder="Contenido">{{ articulo.text }}</textarea>
+        </div>
+    </div>
+    <!-- Categorias -->
+    <div class="">
+        <label for="" class="label">Categoria</label>
+        <select name="categoria">
+            {% for categoria in categorias %}
+            <option value="{{ categoria.id }}" {% if categoria.id == articulo.categoria.id %}selected{% endif %}>{{ categoria.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <!-- Tags -->
+    <div class="">
+        <label for="Tags" class="label">Tags</label>
+        <select multiple name="tags" style="width: 100%">
+            <!-- Recorremos todos los tags de nuestra base de datos -->
+            {% for tag in tags %}
+                <!-- Creamos una variable -->
+                {% set selected = False %}
+                <!-- Recorremos todos los tag de nuestro articulo, por cada option -->
+                {% for save_tag in articulo.tags %}
+                    <!-- Comparamos si son iguales las ids -->
+                    {% if save_tag.id == tag.id %}
+                        <!-- Marcamos para que sea selected -->
+                        {% set selected = True %}
+                    {% endif %}
+                {% endfor %}
+                <!-- Dibujamos el option -->
+                <option value="{{ tag.id }}" {% if selected == True %}selected{% endif %}>{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <!-- Imagen de portada -->
+    {% if articulo.portada %}
+    <img class="image" style="width: 100%" src="{{ url_for('static', filename='uploads/' + articulo.portada) }}" alt="{{ articulo.title }}">
+    {% endif %}
+    <div class="field">
+        <label for="">Imagen</label>
+        <input type="file" name="portada" class="input">
+    </div>
+    <!-- Enviar -->
+    <div class="field" style="padding-top: 1rem">
+        <input type="submit" value="Actualizar" class="button is-primary">
+    </div>
+</form>
+{% endblock %}

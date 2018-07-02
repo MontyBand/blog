@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bulma.min.css") }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <title>{% block title %}{% endblock %} | Blog</title>
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar is-dark">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ url_for('blog_all') }}">
+            <img src="{{ url_for('static', filename="img/logo.png") }}" alt="Bulma: a modern CSS framework based on Flexbox">
+            </a>
+            <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="{{ url_for('blog_all') }}">Blog</a>
+                {% if 'id' in session %}
+                    <a class="navbar-item" href="{{ url_for('admin_articulos') }}">Admin</a>
+                    <a class="navbar-item" href="{{ url_for('logout') }}">Salir</a>
+                {% else %}
+                    <a class="navbar-item" href="{{ url_for('admin_login') }}">Login</a>
+                {% endif %}
+                <form class="navbar-item" action=" {{ url_for('buscar') }}" method="get">
+                    <input style="width: 200px" name="q" class="navbar-item input" type="text" placeholder="Buscar articulos">
+                    <button class="button" type="submit" value="Buscar"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            {% for category, mensaje in mensajes %}
+                <div class="notification is-{{ category }}">
+                    {{ mensaje }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    {% block page_title %}{% endblock %}
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        {% block body %}{% endblock %}
+    </section>
+    <footer class="has-text-centered">
+        2018
+    </footer>
+</body>
+</html>

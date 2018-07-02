@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bulma.min.css") }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <title>{% block title %}{% endblock %} | Blog</title>
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar is-dark">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ url_for('blog_all') }}">
+            <img src="{{ url_for('static', filename="img/logo.png") }}" alt="Bulma: a modern CSS framework based on Flexbox">
+            </a>
+            <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="{{ url_for('blog_all') }}">Blog</a>
+                <a class="navbar-item" href="{{ url_for('logout') }}">Salir</a>
+            </div>
+        </div>
+    </nav>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            {% for category, mensaje in mensajes %}
+                <div class="notification is-{{ category }}">
+                    {{ mensaje }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <section class="container">
+        <div class="columns">
+            <div class="column">
+                <aside class="menu">
+                    <p class="menu-label">
+                        Articulos
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="{{ url_for('admin_nuevo_articulo') }}">Nuevo</a></li>
+                        <li><a href="{{ url_for('admin_articulos') }}">Ver</a></li>
+                    </ul>
+                    <p class="menu-label">
+                        Categorias
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="{{ url_for('admin_nueva_categoria') }}">Nuevo</a></li>
+                        <li><a href="{{ url_for('admin_categorias') }}">Ver</a></li>
+                    </ul>
+                    <p class="menu-label">
+                        Tags
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="{{ url_for('admin_nuevo_tag') }}">Nuevo</a></li>
+                        <li><a href="{{ url_for('admin_tags') }}">Ver</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </section>
+    <footer class="has-text-centered">
+        2018
+    </footer>
+</body>
+</html>

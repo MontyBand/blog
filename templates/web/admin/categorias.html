@@ -1,0 +1,69 @@
+{% extends 'layouts/admin.html' %}
+{% block title %}Categorias{% endblock %}
+{% block page_title %}Categorias{% endblock %}
+{% block body %}
+<div id="app">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Categoria</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria.name }}</td>
+                    <td>
+                        <div class="columns">
+                            <div class="column">
+                                <a href="{{ url_for('editar_categoria', id=categoria.id) }}" class="button is-primary"><i class="fas fa-pencil-alt"></i></a>
+                            </div>
+                            <div class="column">
+                                <a href="#" @click="mostrarOcultarModal({{ categoria.id }})" class="button is-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal" v-bind:class="{ 'is-active': verBorrar }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+        <header class="modal-card-head">
+            ¿Seguro que quieres borrarlo?
+        </header>
+        <footer class="modal-card-foot">
+            <form action="{{ url_for('borrar_categoria') }}" method="post">
+                <!-- Pasas el id con el primer input oculto (hidden) y la pagina que redireccionamos con el name -->
+                <input name="categoria-borrar" type="hidden" :value="categoriaIdBorrar">
+                <input type="submit" class="button is-danger" value="Si">
+            </form>
+            <button @click="mostrarOcultarModal(0)" class="button">No</button>
+        </footer>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            data: {
+                verBorrar: false,
+                categoriaIdBorrar: 0
+            },
+            methods: {
+                mostrarOcultarModal: function (idBorrar) {
+                    this.categoriaIdBorrar = idBorrar;
+                    this.verBorrar = !this.verBorrar;
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

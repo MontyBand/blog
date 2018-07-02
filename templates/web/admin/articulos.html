@@ -1,0 +1,74 @@
+{% extends 'layouts/admin.html' %}
+{% block title %}Articulos{% endblock %}
+{% block page_title %}Articulos{% endblock %}
+{% block body %}
+<div id="app">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Titulo</th>
+                <th>Categoria</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for articulo in articulos %}
+                <tr>
+                    <td>{{ articulo.id }}</td>
+                    <td>{{ articulo.title }}</td>
+                    <!-- Al relacionar la tabla articulo con categoria podemos obtener datos de esta manera -->
+                    <td>{{ articulo.categoria.name }}</td>
+                    <td>
+                        <div class="columns">
+                            <div class="column">
+                                <a href="{{ url_for('admin_actualizar_articulo', id=articulo.id) }}" class="button is-primary"><i class="fas fa-pencil-alt"></i></a>
+                            </div>
+                            <div class="column">
+                                <button @click="mostrarOcultarModal({{ articulo.id }})" class="button is-danger"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal" v-bind:class="{ 'is-active': verBorrar }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+        <header class="modal-card-head">
+            ¿Seguro que quieres borrarlo?
+        </header>
+        <footer class="modal-card-foot">
+            <form action="{{ url_for('borrar_articulo') }}" method="post">
+                <!-- Pasas el id con el primer input oculto (hidden) y la pagina que redireccionamos con el name -->
+                <input name="articulo-borrar" type="hidden" :value="articuloIdBorrar">
+                <input type="submit" class="button is-danger" value="Si">
+            </form>
+            <button @click="mostrarOcultarModal(0)" class="button">No</button>
+        </footer>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            data: {
+                verBorrar: false,
+                articuloIdBorrar: 0
+            },
+            methods: {
+                mostrarOcultarModal: function (idBorrar) {
+                    this.articuloIdBorrar = idBorrar;
+                    this.verBorrar = !this.verBorrar;
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
